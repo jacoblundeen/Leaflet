@@ -74,3 +74,15 @@ hopkinsLatLong %>%
   addTiles() %>%
   addMarkers(icon = hopkinsIcon, popup = hopkinsSites)
 ```
+
+## Leaflet Map with Marker Clusters
+
+```{r}
+df <- data.frame(lat = runif(500, min = 39.25, max = 39.35),
+                 lng = runif(500, min = -76.65, max = -76.55))
+
+df %>%
+  leaflet() %>%
+  addTiles() %>%
+  addMarkers(clusterOptions = markerClusterOptions())
+```
