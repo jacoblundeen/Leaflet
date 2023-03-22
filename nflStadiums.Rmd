@@ -5,54 +5,20 @@ date: "2023-03-21"
 output: ioslides_presentation
 ---
 
-```{r setup, include=FALSE, echo = FALSE}
+```{r setup, include=FALSE, echo = FALSE, message = FALSE, warnings = FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-```{r}
-library(readr)
-library(leaflet)
-nflLatLong <- read_csv("https://raw.githubusercontent.com/Sinbad311/CloudProject/master/NFL%20Stadium%20Latitude%20and%20Longtitude.csv")
-nflLatLong$Team[18] = "Commanders"
-nflLatLong$Team[24] = "49ers"
+```{r, results='hide'}
+# library(tidyverse)
+nflLatLong <- read.csv("NFLData.csv")
 ```
 
+
 ```{r}
+library(leaflet)
 teamIcons <- icons(
-  iconUrl = c(
-    "https://1000logos.net/wp-content/uploads/2018/07/Tennessee-Titans-Logo-640x400.png",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/New_York_Giants_logo.svg/2560px-New_York_Giants_logo.svg.png",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Pittsburgh_Steelers_logo.svg/2048px-Pittsburgh_Steelers_logo.svg.png",
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQu9f7ObcYxO0GonX0cJsbKtGDKqYh-MhWV69Ee6-uc&s",
-    "https://cdn11.bigcommerce.com/s-uqijfs/images/stencil/1280x1280/products/115793/132683/3208508688__36701.1573686174.jpg?c=2",
-    "https://cdn.freebiesupply.com/images/large/2x/tampa-bay-buccaneers-logo-transparent.png",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Indianapolis_Colts_logo.svg/974px-Indianapolis_Colts_logo.svg.png",
-    "https://1000logos.net/wp-content/uploads/2017/06/Minnesota-Vikings-Logo-1965.png",
-    "https://logos-world.net/wp-content/uploads/2020/05/Arizona-Cardinals-Logo.png",
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkoqdPzbfIXv3IIsHpLFC4FfOFrkRmO4o-_eXm1rU-8w&s",
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSAnY-nCIry6KwyPU4m5CCLg7gVWwgQ647huFDY1n65&s",
-    "https://upload.wikimedia.org/wikipedia/en/thumb/6/6b/New_York_Jets_logo.svg/1200px-New_York_Jets_logo.svg.png",
-    "https://deluxe.scene7.com/is/image/deluxecorp/six-reasons-denver-broncos-logo-design-works_hero?$deluxe_param$&wid=900",
-    "https://1000logos.net/wp-content/uploads/2021/04/Miami-Dolphins-logo.png",
-    "https://mobileimages.lowes.com/productimages/56392be6-548a-43fe-83c4-793d59fefac7/11879960.jpg?size=pdhism",
-    "https://cdn.freebiesupply.com/images/large/2x/chicago-bears-logo-transparent.png",
-    "https://static.clubs.nfl.com/image/private/f_auto/patriots/ftuml6gmogyahtnd2neb",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Washington_Commanders_logo.svg/2560px-Washington_Commanders_logo.svg.png",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Green_Bay_Packers_logo.svg/2560px-Green_Bay_Packers_logo.svg.png",
-    "https://logos-world.net/wp-content/uploads/2020/06/Los-Angeles-Chargers-Logo.png",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/New_Orleans_Saints_logo.svg/630px-New_Orleans_Saints_logo.svg.png",
-    "https://logos-world.net/wp-content/uploads/2020/05/Houston-Texans-logo.png",
-    "https://1000logos.net/wp-content/uploads/2017/08/Color-Buffalo-Bills-logo.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/San_Francisco_49ers_logo.svg/2560px-San_Francisco_49ers_logo.svg.png",
-    "https://logos-world.net/wp-content/uploads/2020/05/Jacksonville-Jaguars-logo.png",
-    "https://1000logos.net/wp-content/uploads/2016/10/Cleveland-Browns-logo.jpg",
-    "https://i.etsystatic.com/11685205/r/il/3080bb/1149991997/il_570xN.1149991997_3nf9.jpg",
-    "https://logos-world.net/wp-content/uploads/2020/05/Kansas-City-Chiefs-logo.png",
-    "https://i.guim.co.uk/img/media/c15695433fb1871e73851c41ad963f3b7c562767/0_164_2000_1200/master/2000.jpg?width=1200&height=900&quality=85&auto=format&fit=crop&s=7b0b7cbe882fa6e6cb783536ef8875d0",
-    "https://static.www.nfl.com/t_q-best/league/api/clubs/logos/SEA",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Cincinnati_Bengals_logo.svg/2560px-Cincinnati_Bengals_logo.svg.png",
-    "https://logos-world.net/wp-content/uploads/2020/05/Detroit-Lions-logo.png"
-  ),
+  iconUrl = nflLatLong$Logos,
   iconWidth = 40*215/230, iconHeight = 31, iconAnchorX = 31*215/230/2,
   iconAnchorY = 16
 )
@@ -61,8 +27,15 @@ teamIcons <- icons(
 ## NFL Stadiums
 
 ```{r}
-nflLatLong[,c(3,4)] %>%
-  leaflet() %>%
+leaflet() %>%
   addTiles() %>%
-  addMarkers(icon = teamIcons, popup = nflLatLong$Team)
+  addMarkers(data = nflLatLong,
+             lng = ~longitude,
+             lat = ~latitude,
+             icon = teamIcons, 
+             label = ~Team,
+             popup = ~paste("<br>Conference:", Conference,
+                            "<br>State:", State,
+                            "<br>Number of SBs:", SBs)
+             )
 ```
