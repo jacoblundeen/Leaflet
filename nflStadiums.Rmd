@@ -1,5 +1,6 @@
 ---
-title: "NFL Stadium Locations"
+title: "NFL Stadiums"
+subtitle: "An Interactive Guide"
 author: "Jacob M. Lundeen"
 date: "2023-03-21"
 output: ioslides_presentation
@@ -9,6 +10,7 @@ output: ioslides_presentation
 knitr::opts_chunk$set(echo = FALSE)
 library(geosphere)
 library(leaflet)
+library(gt)
 ```
 
 ```{r, results='hide'}
@@ -20,7 +22,7 @@ teamIcons <- icons(
   )
 ```
 
-## All 32 NFL Stadiums
+## National Football League Stadiums
 
 ```{r}
 leaflet() %>%
@@ -69,11 +71,11 @@ nfcNIcons <- icons(
   iconWidth = 40*215/230, iconHeight = 31, iconAnchorX = 31*215/230/2,
   iconAnchorY = 16
 )
-area <- round(areaPolygon(as.matrix(nfcNSubset[,5:4])) * (3.861 * 10^(-7)), 2)
+nfcNortharea <- round(areaPolygon(as.matrix(nfcNSubset[,5:4])) * (3.861 * 10^(-7)), 2)
 leaflet() %>%
   addTiles() %>%
   addPolygons(lng = nfcNSubset$longitude, lat = nfcNSubset$latitude, 
-              popup = paste("Area:", area, "mi<sup>2")) %>%
+              popup = paste("Area:", nfcNortharea, "mi<sup>2")) %>%
   addMarkers(data = nfcNSubset,
              lng = ~longitude,
              lat = ~latitude,
@@ -97,11 +99,11 @@ nfcSIcons <- icons(
   iconWidth = 40*215/230, iconHeight = 31, iconAnchorX = 31*215/230/2,
   iconAnchorY = 16
 )
-area <- round(areaPolygon(as.matrix(nfcSSubset[,5:4])) * (3.861 * 10^(-7)), 2)
+nfcSoutharea <- round(areaPolygon(as.matrix(nfcSSubset[,5:4])) * (3.861 * 10^(-7)), 2)
 leaflet() %>%
   addTiles() %>%
   addPolygons(lng = nfcSSubset$longitude, lat = nfcSSubset$latitude, 
-              popup = paste("Area:", area, "mi<sup>2")) %>%
+              popup = paste("Area:", nfcSoutharea, "mi<sup>2")) %>%
   addMarkers(data = nfcSSubset,
              lng = ~longitude,
              lat = ~latitude,
@@ -125,11 +127,11 @@ nfcEIcons <- icons(
   iconWidth = 40*215/230, iconHeight = 31, iconAnchorX = 31*215/230/2,
   iconAnchorY = 16
 )
-area <- round(areaPolygon(as.matrix(nfcESubset[,5:4])) * (3.861 * 10^(-7)), 2)
+nfcEastarea <- round(areaPolygon(as.matrix(nfcESubset[,5:4])) * (3.861 * 10^(-7)), 2)
 leaflet() %>%
   addTiles() %>%
   addPolygons(lng = nfcESubset$longitude, lat = nfcESubset$latitude, 
-              popup = paste("Area:", area, "mi<sup>2")) %>%
+              popup = paste("Area:", nfcEastarea, "mi<sup>2")) %>%
   addMarkers(data = nfcESubset,
              lng = ~longitude,
              lat = ~latitude,
@@ -153,11 +155,11 @@ nfcWIcons <- icons(
   iconWidth = 40*215/230, iconHeight = 31, iconAnchorX = 31*215/230/2,
   iconAnchorY = 16
 )
-area <- round(areaPolygon(as.matrix(nfcWSubset[,5:4])) * (3.861 * 10^(-7)), 2)
+nfcWestarea <- round(areaPolygon(as.matrix(nfcWSubset[,5:4])) * (3.861 * 10^(-7)), 2)
 leaflet() %>%
   addTiles() %>%
   addPolygons(lng = nfcWSubset$longitude, lat = nfcWSubset$latitude, 
-              popup = paste("Area:", area, "mi<sup>2")) %>%
+              popup = paste("Area:", nfcWestarea, "mi<sup>2")) %>%
   addMarkers(data = nfcWSubset,
              lng = ~longitude,
              lat = ~latitude,
@@ -191,4 +193,154 @@ leaflet() %>%
                             "<br>State:", State,
                             "<br>Number of SBs:", SBs)
              )
+```
+
+## AFC North Division Stadiums
+
+```{r}
+afcNorthSubset = subset(afcSubset, Division == "North")
+rownames(afcNorthSubset)<-1:nrow(afcNorthSubset)
+afcNorthSubset <- afcNorthSubset[c(1,3,4,2),]
+afcNorthIcons <- icons(
+  iconUrl = afcNorthSubset$Logos,
+  iconWidth = 40*215/230, iconHeight = 31, iconAnchorX = 31*215/230/2,
+  iconAnchorY = 16
+)
+afcNorthArea <- round(areaPolygon(as.matrix(afcNorthSubset[,5:4])) * (3.861 * 10^(-7)), 2)
+leaflet() %>%
+  addTiles() %>%
+  addPolygons(lng = afcNorthSubset$longitude, lat = afcNorthSubset$latitude, 
+              popup = paste("Area:", afcNorthArea, "mi<sup>2")) %>%
+  addMarkers(data = afcNorthSubset,
+             lng = ~longitude,
+             lat = ~latitude,
+             clusterOptions = markerClusterOptions(),
+             icon = afcNorthIcons, 
+             label = ~Team,
+             popup = ~paste("<br>Conference:", Conference,
+                            "<br>State:", State,
+                            "<br>Number of SBs:", SBs)
+             )
+```
+
+## AFC South Division Stadiums
+
+```{r}
+afcSouthSubset = subset(afcSubset, Division == "South")
+#rownames(nfcWSubset)<-1:nrow(afcNorthSubset)
+#nfcWSubset <- nfcWSubset[c(1,3,2,4),]
+afcSouthIcons <- icons(
+  iconUrl = afcSouthSubset$Logos,
+  iconWidth = 40*215/230, iconHeight = 31, iconAnchorX = 31*215/230/2,
+  iconAnchorY = 16
+)
+afcSouthArea <- round(areaPolygon(as.matrix(afcSouthSubset[,5:4])) * (3.861 * 10^(-7)), 2)
+leaflet() %>%
+  addTiles() %>%
+  addPolygons(lng = afcSouthSubset$longitude, lat = afcSouthSubset$latitude, 
+              popup = paste("Area:", afcSouthArea, "mi<sup>2")) %>%
+  addMarkers(data = afcSouthSubset,
+             lng = ~longitude,
+             lat = ~latitude,
+             clusterOptions = markerClusterOptions(),
+             icon = afcSouthIcons, 
+             label = ~Team,
+             popup = ~paste("<br>Conference:", Conference,
+                            "<br>State:", State,
+                            "<br>Number of SBs:", SBs)
+             )
+```
+
+## AFC East Division Stadiums
+
+```{r}
+afcEastSubset = subset(afcSubset, Division == "East")
+#rownames(nfcWSubset)<-1:nrow(afcNorthSubset)
+#nfcWSubset <- nfcWSubset[c(1,3,2,4),]
+afcEastIcons <- icons(
+  iconUrl = afcEastSubset$Logos,
+  iconWidth = 40*215/230, iconHeight = 31, iconAnchorX = 31*215/230/2,
+  iconAnchorY = 16
+)
+afcEastArea <- round(areaPolygon(as.matrix(afcEastSubset[,5:4])) * (3.861 * 10^(-7)), 2)
+leaflet() %>%
+  addTiles() %>%
+  addPolygons(lng = afcEastSubset$longitude, lat = afcEastSubset$latitude, 
+              popup = paste("Area:", afcEastArea, "mi<sup>2")) %>%
+  addMarkers(data = afcEastSubset,
+             lng = ~longitude,
+             lat = ~latitude,
+             clusterOptions = markerClusterOptions(),
+             icon = afcEastIcons, 
+             label = ~Team,
+             popup = ~paste("<br>Conference:", Conference,
+                            "<br>State:", State,
+                            "<br>Number of SBs:", SBs)
+             )
+```
+
+## AFC West Division Stadiums
+
+```{r}
+afcWestSubset = subset(afcSubset, Division == "West")
+rownames(afcWestSubset)<-1:nrow(afcWestSubset)
+afcWestSubset <- afcWestSubset[c(1,4,2,3),]
+afcWestIcons <- icons(
+  iconUrl = afcWestSubset$Logos,
+  iconWidth = 40*215/230, iconHeight = 31, iconAnchorX = 31*215/230/2,
+  iconAnchorY = 16
+)
+afcWestArea <- round(areaPolygon(as.matrix(afcWestSubset[,5:4])) * (3.861 * 10^(-7)), 2)
+leaflet() %>%
+  addTiles() %>%
+  addPolygons(lng = afcWestSubset$longitude, lat = afcWestSubset$latitude, 
+              popup = paste("Area:", afcWestArea, "mi<sup>2")) %>%
+  addMarkers(data = afcWestSubset,
+             lng = ~longitude,
+             lat = ~latitude,
+             clusterOptions = markerClusterOptions(),
+             icon = afcWestIcons, 
+             label = ~Team,
+             popup = ~paste("<br>Conference:", Conference,
+                            "<br>State:", State,
+                            "<br>Number of SBs:", SBs)
+             )
+```
+
+## Summary Statistics
+
+```{r, caption="Area is in squared miles"}
+Division_Area <- c(nfcNortharea, nfcSoutharea, nfcEastarea, nfcWestarea, 
+                   afcNorthArea, afcSouthArea, afcEastArea, afcWestArea)
+Division_SBs <- c(sum(nfcNSubset$SBs), sum(nfcSSubset$SBs), sum(nfcESubset$SBs), sum(nfcWSubset$SBs),
+                  sum(afcNorthSubset$SBs), sum(afcSouthSubset$SBs), sum(afcEastSubset$SBs), sum(afcEastSubset$SBs))
+Divisions <- c("NFC_North", "NFC_South", "NFC_East", "NFC_West",
+                          "AFC_North", "AFC_South", "AFC_East", "AFC_West")
+summaryStats <- data.frame(Divisions, Division_Area, Division_SBs)
+
+
+
+gt_tbl <- summaryStats %>%
+  gt(rowname_col = 'Divisions')
+gt_tbl <- gt_tbl %>%
+  tab_header(
+    title = "NFL Stadiums by Division",
+    subtitle = "Area covered and number of Super Bowls"
+  ) %>%
+  cols_label(
+    Division_Area = "Division Area",
+    Division_SBs = "Super Bowls"
+  ) %>%
+  tab_footnote(
+    footnote = "Division Area is in square milage"
+  ) %>%
+  tab_row_group(
+    label = "NFC",
+    rows = 1:4
+  ) %>%
+  tab_row_group(
+    label = "AFC",
+    rows = 5:8
+  )
+gt_tbl
 ```
