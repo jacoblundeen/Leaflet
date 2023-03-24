@@ -1,6 +1,6 @@
 ---
 title: "NFL Stadiums"
-subtitle: "An Interactive Guide"
+subtitle: "An R Markdown Presentation. Hit the arrow key on your keyboard to continue."
 author: "Jacob M. Lundeen"
 date: "2023-03-21"
 output: ioslides_presentation
@@ -21,6 +21,18 @@ teamIcons <- icons(
   iconAnchorY = 16
   )
 ```
+
+## Presentation Information
+
+This presentation is done as a requirement for the Developing Data Products
+course from Johns Hopkins University. The presentation is a series of slides
+using the Leaflet package to show maps with markers of the 32 National Football
+League stadiums. The markers, when both hovered over or clicked on, will
+present information to the user about the stadiums. The user can also click on
+the blue polygons for more information.
+
+To progress through the presentation, use the arrow keys on the keyboard or
+click to the right or left just outside the white slide box.
 
 ## National Football League Stadiums
 
